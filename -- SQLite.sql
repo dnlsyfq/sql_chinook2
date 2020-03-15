@@ -85,19 +85,50 @@
 
 -- 6
 
-WITH cust_india AS (
-        SELECT * FROM customer WHERE country = 'India'
-    ),
-    cust_sum AS (
-        SELECT cust_india.* ,
-            SUM(invoice.total) as total_purchase
-        FROM cust_india INNER JOIN invoice
-        ON cust_india.customer_id = invoice.customer_id 
-        GROUP BY 1
-    )
+-- WITH cust_india AS (
+--         SELECT * FROM customer WHERE country = 'India'
+--     ),
+--     cust_sum AS (
+--         SELECT cust_india.* ,
+--             SUM(invoice.total) as total_purchase
+--         FROM cust_india INNER JOIN invoice
+--         ON cust_india.customer_id = invoice.customer_id 
+--         GROUP BY 1
+--     )
 
-SELECT 
-    first_name || " " || last_name as customer_name,
-    total_purchase
-FROM cust_sum
-ORDER BY customer_name ASC;
+-- SELECT 
+--     first_name || " " || last_name as customer_name,
+--     total_purchase
+-- FROM cust_sum
+-- ORDER BY customer_name ASC;
+
+--8
+--  customer from each country that has spent the most money at our store. 
+
+-- WITH invoice_sum AS (SELECT 
+--     customer_id,
+--     billing_country,
+--     SUM(total) total
+-- FROM invoice
+-- GROUP BY 2),
+--     max_sum AS (SELECT 
+--     billing_country, 
+--     MAX(total) max_total
+--     FROM invoice_sum
+--     GROUP BY billing_country
+--     ),
+--     cust_max AS (SELECT 
+--        invoice_sum.customer_id, 
+--        invoice_sum.billing_country,
+--        max_sum.max_total
+--     FROM invoice_sum 
+--     INNER JOIN max_sum ON invoice_sum.billing_country = max_sum.billing_country
+--     )
+
+-- SELECT
+--     customer.country,
+--     customer.first_name || " " || customer.last_name customer_name,
+--     cust_max.max_total total_purchased
+-- FROM customer
+-- INNER JOIN cust_max ON customer.customer_id = cust_max.customer_id;
+
